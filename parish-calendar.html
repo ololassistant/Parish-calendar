@@ -1,0 +1,909 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OLOL Parish Calendar</title>
+
+<style>
+:root {
+    --navy: #102746;
+    --blue: #214c7c;
+    --gold: #d8b66a;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --text: #26374b;
+    --muted: #8492a6;
+    --bec: #25845b;
+    --community: #d77a32;
+    --discussion: #8056a8;
+    --christmas: #bd4b50;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--light);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* HEADER */
+
+.header {
+    background: linear-gradient(120deg, #102746, #214c7c);
+    color: white;
+    padding: 30px 6%;
+    border-bottom: 3px solid var(--gold);
+}
+
+.header-content {
+    max-width: 1250px;
+    margin: auto;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 55px;
+    height: 55px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 27px;
+}
+
+.brand h1 {
+    font-size: 23px;
+    font-weight: 600;
+}
+
+.brand p {
+    color: #c5d3e4;
+    font-size: 12px;
+    margin-top: 5px;
+    letter-spacing: 1.5px;
+}
+
+.header-label {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+.header-description {
+    margin-top: 25px;
+}
+
+.header-description h2 {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.header-description p {
+    color: #c5d3e4;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+/* MAIN */
+
+.container {
+    max-width: 1250px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 22px;
+    align-items: start;
+}
+
+.calendar-card,
+.events-card {
+    background: white;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 5px 25px rgba(22,45,75,0.06);
+}
+
+
+/* MODERN CHURCH PHOTO HEADER */
+
+.calendar-header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    min-height: 300px;
+    padding: 45px 50px;
+    margin-bottom: 30px;
+
+    background:
+                url("church-header.jpg") center 55% / cover no-repeat;
+
+    border-radius: 18px;
+    overflow: hidden;
+    color: white;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.month-title h2 {
+    font-size: 24px;
+    color: var(--navy);
+}
+
+.month-title p {
+    font-size: 12px;
+    color: var(--navy);
+    margin-top: 5px;
+}
+
+.navigation {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.nav-btn {
+    width: 38px;
+    height: 38px;
+    border: 1px solid #e1e7ef;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--navy);
+    font-size: 18px;
+}
+
+.nav-btn:hover {
+    background: var(--navy);
+    color: white;
+}
+
+.today-btn {
+    border: none;
+    background: var(--navy);
+    color: white;
+    border-radius: 8px;
+    padding: 11px 17px;
+    cursor: pointer;
+}
+
+.today-btn:hover {
+    background: var(--blue);
+}
+
+/* WEEKDAYS AND DAYS */
+
+.weekdays,
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.weekdays div {
+    text-align: center;
+    padding: 12px 2px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.weekdays div:first-child {
+    color: #c45b5b;
+}
+
+.day {
+    min-height: 105px;
+    padding: 10px;
+    border-right: 1px solid #edf0f5;
+    border-bottom: 1px solid #edf0f5;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.day:hover {
+    background: #f3f7fc;
+}
+
+.day.empty {
+    background: #fafbfd;
+    cursor: default;
+}
+
+.day-number {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.day.today .day-number {
+    background: var(--navy);
+    color: white;
+}
+
+.day.selected {
+    background: #edf4fc;
+    outline: 2px solid var(--blue);
+    outline-offset: -2px;
+}
+
+.day:first-child .day-number {
+    color: #c45b5b;
+}
+
+.day.today .day-number {
+    color: white;
+}
+
+/* EVENT INDICATORS */
+
+.event-dot {
+    display: block;
+    color: white;
+    font-size: 10px;
+    padding: 5px;
+    margin-top: 6px;
+    border-radius: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.category-parish {
+    background: var(--blue);
+}
+
+.category-bec {
+    background: var(--bec);
+}
+
+.category-community {
+    background: var(--community);
+}
+
+.category-discussion {
+    background: var(--discussion);
+}
+
+.category-christmas {
+    background: var(--christmas);
+}
+
+.category-default {
+    background: #64748b;
+}
+
+/* LEGEND */
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #edf0f5;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+/* EVENT DETAILS */
+
+.events-card h3 {
+    font-size: 18px;
+    color: var(--navy);
+    margin-bottom: 8px;
+}
+
+.details-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-pill {
+    background: #edf4fc;
+    color: var(--blue);
+    border-radius: 20px;
+    padding: 6px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.event-date {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.event-item {
+    padding: 16px 0;
+    border-top: 1px solid #edf0f5;
+}
+
+.event-item h4 {
+    font-size: 14px;
+    color: var(--navy);
+    margin-bottom: 8px;
+}
+
+.event-item p {
+    font-size: 12px;
+    color: #7d8a9c;
+    line-height: 1.6;
+    margin-top: 5px;
+}
+
+.event-meta {
+    color: var(--blue) !important;
+    font-weight: 600;
+}
+
+.event-tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    background: #f3eee1;
+    color: #92733a;
+}
+
+.empty-state {
+    padding: 30px 10px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.empty-state span {
+    display: block;
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.loading-state {
+    padding: 25px 10px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.error-state {
+    padding: 20px 10px;
+    color: #b54747;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    padding: 25px;
+    font-size: 12px;
+    color: #8b98a9;
+}
+
+.footer strong {
+    color: var(--navy);
+}
+
+/* MOBILE */
+
+@media (max-width: 850px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .day {
+        min-height: 75px;
+        padding: 5px;
+    }
+
+    .event-dot {
+        font-size: 8px;
+        padding: 3px;
+    }
+}
+
+@media (max-width: 500px) {
+    .header {
+        padding: 25px 20px;
+    }
+
+    .brand h1 {
+        font-size: 17px;
+    }
+
+    .header-description h2 {
+        font-size: 24px;
+    }
+
+    .calendar-card,
+    .events-card {
+        padding: 13px;
+    }
+
+    .day {
+        min-height: 60px;
+        padding: 3px;
+    }
+
+    .day-number {
+        width: 23px;
+        height: 23px;
+        font-size: 11px;
+    }
+
+    .weekdays div {
+        font-size: 10px;
+    }
+
+    .event-dot {
+        font-size: 7px;
+        padding: 2px;
+    }
+
+    .month-title h2 {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-content">
+
+        <div class="header-top">
+            <div class="brand">
+                <div class="logo">✝</div>
+                <div>
+                    <h1>Our Lady of Lourdes</h1>
+                    <p>IPOH PARISH</p>
+                </div>
+            </div>
+
+            <div class="header-label">
+                PARISH COMMUNITY
+            </div>
+        </div>
+
+        <div class="header-description">
+            <h2>Parish Calendar</h2>
+            <p>Stay connected with our parish activities, celebrations and events.</p>
+        </div>
+
+    </div>
+</header>
+
+<main class="container">
+
+    <div class="dashboard">
+
+        <section class="calendar-card">
+
+            <div class="calendar-header">
+
+                <div class="month-title">
+                    <h2 id="monthYear"></h2>
+                    <p>Parish monthly overview</p>
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-btn" id="prevMonth" aria-label="Previous month">‹</button>
+                    <button class="today-btn" id="todayBtn">Today</button>
+                    <button class="nav-btn" id="nextMonth" aria-label="Next month">›</button>
+                </div>
+
+            </div>
+
+            <div class="weekdays">
+                <div>SUN</div>
+                <div>MON</div>
+                <div>TUE</div>
+                <div>WED</div>
+                <div>THU</div>
+                <div>FRI</div>
+                <div>SAT</div>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid"></div>
+
+            <div class="legend">
+                <span class="legend-item">
+                    <i class="legend-dot category-parish"></i>Parish
+                </span>
+                            </div>
+
+        </section>
+
+        <aside class="events-card">
+
+            <div class="details-heading">
+                <h3>Parish Events</h3>
+                <span class="date-pill" id="eventCount">0 events</span>
+            </div>
+
+            <p class="event-date" id="selectedDate"></p>
+
+            <div id="eventDetails">
+                <div class="loading-state">Loading parish activities...</div>
+            </div>
+
+        </aside>
+
+    </div>
+
+</main>
+
+<footer class="footer">
+    <strong>Our Lady of Lourdes, Ipoh</strong>
+    <p style="margin-top:7px;">
+        © 2026 OLOL Parish Calendar
+    </p>
+</footer>
+
+<script>
+
+/* =================================
+   GOOGLE SHEETS CONNECTION
+================================= */
+
+const API_URL ="https://script.google.com/macros/s/AKfycbzS51oDT6IaovxZHFcVDtVousU1vlEtRhTJo2ffVd9MzcVgd2PJrWlMLDxqK-5TNdj7Mg/exec";
+let events = [];
+
+const monthYear = document.getElementById("monthYear");
+const calendarGrid = document.getElementById("calendarGrid");
+const selectedDateText = document.getElementById("selectedDate");
+const eventDetails = document.getElementById("eventDetails");
+const eventCount = document.getElementById("eventCount");
+
+let currentDate = new Date();
+let selectedDate = new Date();
+
+
+/* =================================
+   LOAD EVENTS FROM GOOGLE SHEETS
+================================= */
+
+function loadEvents() {
+
+    eventDetails.innerHTML =
+        '<div class="loading-state">Loading parish activities...</div>';
+
+    const script = document.createElement("script");
+
+    script.src = API_URL +
+        "?callback=receiveCalendarEvents&time=" + Date.now();
+
+    script.onerror = function() {
+
+        eventDetails.innerHTML = `
+            <div class="error-state">
+                Unable to load parish activities.
+                Please refresh the page or try again later.
+            </div>
+        `;
+
+    };
+
+    document.body.appendChild(script);
+}
+
+
+/* GOOGLE SHEETS SENDS THE DATA TO THIS FUNCTION */
+
+function receiveCalendarEvents(data) {
+console.log("Google Sheets data received:", data);
+    events = data.map(event => ({
+
+        id: event.id,
+        date: event.date,
+        title: String(event.id || "").trim(),
+        startTime: String(event.startTime || "").trim(),
+        venue: String(event.venue || "").trim()
+
+    }));
+    console.log("Events successfully loaded:", events);
+
+    displayCalendar();
+}
+
+
+/* =================================
+   DATE FORMATTING
+================================= */
+
+function formatDate(date) {
+
+    const year = date.getFullYear();
+
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+
+/* =================================
+   DISPLAY CALENDAR
+================================= */
+
+function displayCalendar() {
+
+    const year = currentDate.getFullYear();
+
+    const month = currentDate.getMonth();
+
+    monthYear.textContent = currentDate.toLocaleDateString(
+        "en-MY",
+        { month: "long", year: "numeric" }
+    );
+
+    calendarGrid.innerHTML = "";
+
+    const firstDay = new Date(year, month, 1).getDay();
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const today = formatDate(new Date());
+
+    for (let i = 0; i < firstDay; i++) {
+
+        const empty = document.createElement("div");
+
+        empty.className = "day empty";
+
+        calendarGrid.appendChild(empty);
+
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+
+        const date = new Date(year, month, day);
+
+        const dateString = formatDate(date);
+
+        const dayBox = document.createElement("div");
+
+        dayBox.className = "day";
+
+        if (dateString === today) {
+            dayBox.classList.add("today");
+        }
+
+        if (dateString === formatDate(selectedDate)) {
+            dayBox.classList.add("selected");
+        }
+
+        const number = document.createElement("span");
+
+        number.className = "day-number";
+
+        number.textContent = day;
+
+        dayBox.appendChild(number);
+
+        const dayEvents = events.filter(
+            event => event.date === dateString
+        );
+
+        dayEvents.forEach(event => {
+
+            const dot = document.createElement("span");
+
+            dot.className = "event-dot category-parish";
+
+            dot.textContent = event.title;
+
+            dot.title = event.title;
+
+            dayBox.appendChild(dot);
+
+        });
+
+        dayBox.addEventListener("click", function() {
+
+            selectedDate = date;
+
+            displayCalendar();
+
+        });
+
+        calendarGrid.appendChild(dayBox);
+
+    }
+
+    displayEvents(formatDate(selectedDate));
+
+}
+
+
+/* =================================
+   DISPLAY SELECTED DATE EVENTS
+================================= */
+
+function displayEvents(dateString) {
+
+    const date = new Date(dateString + "T12:00:00");
+
+    selectedDateText.textContent = date.toLocaleDateString(
+        "en-MY",
+        {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    );
+
+    eventDetails.innerHTML = "";
+
+    const selectedEvents = events.filter(
+        event => event.date === dateString
+    );
+
+    eventCount.textContent =
+        selectedEvents.length +
+        (selectedEvents.length === 1 ? " event" : " events");
+
+    if (selectedEvents.length === 0) {
+
+        eventDetails.innerHTML = `
+            <div class="empty-state">
+                <span>📅</span>
+                No parish events scheduled for this date.
+            </div>
+        `;
+
+        return;
+    }
+
+    selectedEvents.forEach(event => {
+
+        const item = document.createElement("div");
+
+        item.className = "event-item";
+
+        const title = document.createElement("h4");
+
+        title.textContent = event.title;
+
+        item.appendChild(title);
+
+        if (event.startTime) {
+
+    const time = document.createElement("p");
+
+    time.className = "event-meta";
+
+    time.textContent = "🕒 " + event.startTime;
+
+    item.appendChild(time);
+
+}
+
+        if (event.venue) {
+
+            const venue = document.createElement("p");
+
+            venue.textContent = "📍 " + event.venue;
+
+            item.appendChild(venue);
+
+        }
+
+        eventDetails.appendChild(item);
+
+    });
+
+}
+
+
+/* =================================
+   MONTH NAVIGATION
+================================= */
+
+document.getElementById("prevMonth").addEventListener("click", function() {
+
+    currentDate.setMonth(currentDate.getMonth() - 1);
+
+    selectedDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+    );
+
+    displayCalendar();
+
+});
+
+
+document.getElementById("nextMonth").addEventListener("click", function() {
+
+    currentDate.setMonth(currentDate.getMonth() + 1);
+
+    selectedDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+    );
+
+    displayCalendar();
+
+});
+
+
+document.getElementById("todayBtn").addEventListener("click", function() {
+
+    currentDate = new Date();
+
+    selectedDate = new Date();
+
+    displayCalendar();
+
+});
+
+
+/* =================================
+   START CALENDAR
+================================= */
+
+loadEvents();
+
+</script>
+
+</body>
+</html>
